@@ -11,10 +11,12 @@ public class StudyPlanner {
     }
 
     public void listCourses(){
+
         for(Course course : courses){
+            String status = course.isCompleted() ? "Completed" : "Not completed";
             System.out.println(course.getName() +
                     " (" + course.getCredits()
-            + "hp)");
+            + "hp)" +" - " + status);
         }
     }
 
