@@ -4,7 +4,7 @@ public class Main {
         Course db = new Course("Kurs i databaser " , 7.5);
 
       StudyPlanner SUplanner = new StudyPlanner();
-
+      prog2.complete();
       SUplanner.addCourse(prog2);
       SUplanner.addCourse(db);
 
