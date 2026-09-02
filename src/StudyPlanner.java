@@ -10,6 +10,14 @@ public class StudyPlanner {
         courses.add(course);
     }
 
+    public void completeCourse(String courseName){
+        for(Course course : courses ){
+            if(course.getName().equals(courseName)){
+                course.complete();
+            }
+        }
+    }
+
     public void listCourses(){
 
         for(Course course : courses){
@@ -22,6 +30,14 @@ public class StudyPlanner {
     public  int getNumberOfCourses(){
         return courses.size();
     }
+    public double calculateTotalCredits(){
+        double totalCredits=0;
+        for(Course course : courses){
+            totalCredits += course.getCredits();
+        }
+        return totalCredits;
+    }
+
     public double calculateCompletedCredits(){
         double totalCredits = 0;
         for(Course course : courses){
@@ -31,6 +47,13 @@ public class StudyPlanner {
         }
         return totalCredits;
 
+    }
+    public double getCompletionPercentage(){
+        double total = calculateTotalCredits();
+        if(total == 0){
+            return 0.0;
+        }
+        return (calculateCompletedCredits()  / total) * 100;
     }
 
 }
