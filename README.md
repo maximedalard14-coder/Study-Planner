@@ -41,6 +41,20 @@ This project is used to practice:
 ## Project Status
 
 Work in progress.
+## Current Features
+
+
+- Add courses
+
+- Complete courses
+
+- List courses
+
+- Calculate completed credits
+
+- Calculate total credits
+
+- Calculate study progress
 
 ## Author
 
