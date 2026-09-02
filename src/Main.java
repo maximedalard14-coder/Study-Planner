@@ -8,7 +8,14 @@ public class Main {
       SUplanner.addCourse(prog2);
       SUplanner.addCourse(db);
 
+
+
       SUplanner.listCourses();
+      System.out.println();
+      System.out.println("Number of courses: " + SUplanner.getNumberOfCourses());
+      System.out.println("Completed credits: " +
+              SUplanner.calculateCompletedCredits() + "hp");
+
     }
 
 }

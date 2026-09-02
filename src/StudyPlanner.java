@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 public class StudyPlanner {
-    private ArrayList<Course> courses;
+    private final ArrayList<Course> courses;
 
     public StudyPlanner(){
         courses = new ArrayList<>();
@@ -18,6 +18,19 @@ public class StudyPlanner {
                     " (" + course.getCredits()
             + "hp)" +" - " + status);
         }
+    }
+    public  int getNumberOfCourses(){
+        return courses.size();
+    }
+    public double calculateCompletedCredits(){
+        double totalCredits = 0;
+        for(Course course : courses){
+            if(course.isCompleted()){
+                totalCredits += course.getCredits();
+            }
+        }
+        return totalCredits;
+
     }
 
 }
