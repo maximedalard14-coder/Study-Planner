@@ -1,4 +1,4 @@
-package com.studyplanner.model.model;
+package com.studyplanner.model;
 
 public class Course {
     private final String courseCode;

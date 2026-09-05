@@ -1,6 +1,4 @@
-package com.studyplanner.model.model;
-
-import com.studyplanner.model.model.Course;
+package com.studyplanner.model;
 
 import java.util.ArrayList;
 import java.util.List;

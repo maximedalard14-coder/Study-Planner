@@ -1,4 +1,4 @@
-package com.studyplanner.model.model;
+package com.studyplanner.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 public class Student {
     private final Long id;
     private final String userName;
-    private List<Course> courses;
+    private final List<Course> courses;
 
     public Student(Long id, String userName) {
         this.id = id;
@@ -22,7 +22,7 @@ public class Student {
         return id;
     }
     public List<Course> getCourses() {
-        return courses;
+        return new ArrayList<>(courses);
     }
 
     public String getUserName() {

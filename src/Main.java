@@ -1,5 +1,5 @@
-import com.studyplanner.model.model.Course;
-import com.studyplanner.model.model.StudyPlanner;
+import com.studyplanner.model.Course;
+import com.studyplanner.model.StudyPlanner;
 
 public class Main {
     public static void main(String[] args) {
