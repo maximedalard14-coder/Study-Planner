@@ -1,11 +1,8 @@
-import com.studyplanner.model.Course;
-import com.studyplanner.model.Program;
-import com.studyplanner.model.Student;
-import com.studyplanner.model.StudyPlanner;
+import com.studyplanner.model.*;
 
 public class Main {
     public static void main(String[] args) {
-        Program dsvProgram =
+        Program program =
                 new Program(
                         "Data- och systemvetenskap",
                         180);
@@ -13,8 +10,8 @@ public class Main {
         Student student =
                 new Student(
                         1L,
-                        "maxime",
-                        dsvProgram);
+                        "Maxime",
+                        program);
 
         Course javaCourse =
                 new Course(
@@ -22,18 +19,17 @@ public class Main {
                         "Java Programming",
                         7.5);
 
-        javaCourse.complete();
+        Enrollment enrollment =
+                new Enrollment(
+                        student,
+                        javaCourse);
 
-        student.addCourse(javaCourse);
+        System.out.println(enrollment);
+
+        enrollment.complete("A");
 
         System.out.println(
-                "Completed credits: "
-                        + student.getCompletedCredits());
-
-        System.out.println(
-                "Degree progress: "
-                        + student.getDegreeProgress()
-                        + "%");
+                "Grade: "
+                        + enrollment.getGrade());
     }
-
 }
