@@ -8,9 +8,8 @@ Students often need a simple way to keep track of completed courses and earned c
 
 ## Current Features
 
-- Java console application
-- Course com.studyplanner.model.model implementation
-- Basic object-oriented design
+Implemented the core academic domain model consisting of Course, Student, Program and Enrollment entities.
+Added credit tracking, degree progression calculations and course enrollment management.
 
 ## Planned Features
 
@@ -41,20 +40,6 @@ This project is used to practice:
 ## Project Status
 
 Work in progress.
-## Current Features
-
-
-- Add courses
-
-- Complete courses
-
-- List courses
-
-- Calculate completed credits
-
-- Calculate total credits
-
-- Calculate study progress
 
 ## Author
 
