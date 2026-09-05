@@ -9,7 +9,7 @@ Students often need a simple way to keep track of completed courses and earned c
 ## Current Features
 
 - Java console application
-- Course model implementation
+- Course com.studyplanner.model.model implementation
 - Basic object-oriented design
 
 ## Planned Features
