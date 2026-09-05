@@ -1,9 +1,20 @@
 import com.studyplanner.model.Course;
+import com.studyplanner.model.Program;
+import com.studyplanner.model.Student;
 import com.studyplanner.model.StudyPlanner;
 
 public class Main {
     public static void main(String[] args) {
-        StudyPlanner planner = new StudyPlanner();
+        Program dsvProgram =
+                new Program(
+                        "Data- och systemvetenskap",
+                        180);
+
+        Student student =
+                new Student(
+                        1L,
+                        "maxime",
+                        dsvProgram);
 
         Course javaCourse =
                 new Course(
@@ -11,15 +22,18 @@ public class Main {
                         "Java Programming",
                         7.5);
 
-        planner.addCourse(javaCourse);
+        javaCourse.complete();
 
-        planner.completeCourse("DA123A");
-
-        System.out.println(
-                planner.calculateCompletedCredits());
+        student.addCourse(javaCourse);
 
         System.out.println(
-                planner.getCompletionPercentage());
+                "Completed credits: "
+                        + student.getCompletedCredits());
+
+        System.out.println(
+                "Degree progress: "
+                        + student.getDegreeProgress()
+                        + "%");
     }
 
 }
