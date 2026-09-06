@@ -1,4 +1,6 @@
-package com.studyplanner.model;
+package com.studyplanner.service;
+
+import com.studyplanner.model.Student;
 
 public class StudyReport {
     private final Student student;

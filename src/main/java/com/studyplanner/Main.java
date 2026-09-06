@@ -1,4 +1,7 @@
+package com.studyplanner;
 import com.studyplanner.model.*;
+import com.studyplanner.service.*;
+
 
 public class Main {
 
@@ -38,9 +41,9 @@ public class Main {
                 "Grade: "
                         + enrollment.getGrade());
 
-        StudyReport report =
-                new StudyReport(student);
-
-        report.generate();
+//        StudyReport report =
+//                new StudyReport(student);
+//
+//        report.generate();
     }
 }
