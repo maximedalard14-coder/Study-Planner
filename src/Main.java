@@ -1,17 +1,19 @@
 import com.studyplanner.model.*;
 
 public class Main {
+
     public static void main(String[] args) {
-        Program program =
+
+        Program sysdk =
                 new Program(
-                        "Data- och systemvetenskap",
+                        "Data och Systemvetenskap",
                         180);
 
         Student student =
                 new Student(
-                        1L,
-                        "Maxime",
-                        program);
+                        20060625L,
+                        "mada4843",
+                        sysdk);
 
         Course javaCourse =
                 new Course(
@@ -19,17 +21,26 @@ public class Main {
                         "Java Programming",
                         7.5);
 
+        javaCourse.complete();
+
+        student.addCourse(javaCourse);
+
         Enrollment enrollment =
                 new Enrollment(
                         student,
                         javaCourse);
 
-        System.out.println(enrollment);
-
         enrollment.complete("A");
+
+        System.out.println(enrollment);
 
         System.out.println(
                 "Grade: "
                         + enrollment.getGrade());
+
+        StudyReport report =
+                new StudyReport(student);
+
+        report.generate();
     }
 }

@@ -36,23 +36,23 @@ public class Student {
         return userName;
     }
 
-    public double getCompletedCredits(){
+    public double getCompletedCredits() {
         double credits = 0;
 
-        for(Course course : courses){
-            if(course.isCompleted()) {
+        for (Course course : courses) {
+            if (course.isCompleted()) {
                 credits += course.getCredits();
             }
         }
         return credits;
     }
 
-    public double getDegreeProgress(){
-        if(program.getRequiredCredits() == 0){
+    public double getDegreeProgress() {
+        if (program.getRequiredCredits() == 0) {
             return 0.0;
         }
         return (getCompletedCredits()
-        / program.getRequiredCredits())
-                *100;
+                / program.getRequiredCredits())
+                * 100;
     }
 }
