@@ -19,8 +19,24 @@ The system helps students:
 The project is being developed incrementally, starting with a strong domain model before introducing databases, APIs, security, and advanced analytics.
 
 ---
+## Recent Milestones
+
+### September 2026
+
+- Introduced Maven project structure
+- Added JUnit 5 automated testing
+- Implemented Program model
+- Implemented Enrollment model
+- Implemented StudyReport functionality
+- Added degree progression calculations
 
 ## Current Features
+### Reporting
+
+- Generate study reports
+- Display completed credits
+- Display degree progression
+- Present academic overview
 
 ### Course Management
 
@@ -54,6 +70,14 @@ The project is being developed incrementally, starting with a strong domain mode
 - Calculate completed credits
 - Calculate completion percentage
 - Calculate degree progression toward graduation
+  
+### Automated Testing
+
+- JUnit 5 unit testing
+- Maven test execution
+- Verification of completed credit calculations
+- Verification of degree progression calculations
+- Edge case validation
 
 ---
 
@@ -156,6 +180,8 @@ System.out.println(
 ### Current Stack
 
 - Java
+- Maven
+- JUnit 5
 - Object-Oriented Programming (OOP)
 - Git
 - GitHub
@@ -169,7 +195,6 @@ System.out.println(
 - Spring Security
 - Docker
 - GitHub Actions
-- JUnit
 - Mockito
 
 ---
@@ -234,9 +259,19 @@ Future versions may include recommendation systems capable of:
 
 ## Project Status
 
-Currently under active development.
+The project now includes a complete core domain model, reporting functionality, Maven-based build management, and automated JUnit testing.
 
-The current focus is building a robust domain model before implementing persistence, APIs, security, and advanced features.
+Current focus:
+
+- Statistics and analytics
+- Data persistence
+- Service layer refinement
+
+Future focus:
+
+- Spring Boot REST API
+- PostgreSQL integration
+- Authentication and authorization
 
 ---
 
