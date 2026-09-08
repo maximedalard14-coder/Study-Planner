@@ -23,4 +23,5 @@ public class StudyStatistics {
     public int getRemainingCourses(){
         return getTotalCourses() - getCompletedCourses();
     }
+
 }

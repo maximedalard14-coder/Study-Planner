@@ -1,6 +1,9 @@
 package com.studyplanner;
 import com.studyplanner.model.*;
+import com.studyplanner.repository.CourseFileRepository;
 import com.studyplanner.service.*;
+
+import java.util.List;
 
 
 public class Main {
@@ -54,5 +57,30 @@ public class Main {
         System.out.println(
                 "Remaining Courses: "
                         + statistics.getRemainingCourses());
+
+
+        CourseFileRepository repository = new CourseFileRepository();
+        try {
+            repository.saveCourses(student.getCourses(), "courses.txt");
+            System.out.println("Courses saved successfully");
+
+        }catch (Exception e) {
+            System.out.println("Error saving courses " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
+            System.out.println("\nLoading courses...");
+            List<Course> loadedCourses = repository.loadCourses("courses.txt");
+            for (Course course : loadedCourses){
+                System.out.println(course);
+            }
+
+        }catch (Exception e){
+            System.out.println("Something went wrong " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
     }
 }

@@ -4,45 +4,90 @@ import com.studyplanner.model.Course;
 import com.studyplanner.model.Program;
 import com.studyplanner.model.Student;
 
+import com.studyplanner.repository.CourseFileRepository;
 import com.studyplanner.service.StudyStatistics;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+
+import org.junit.jupiter.api.AfterEach;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StudentTest {
-    Program program = new Program("Data och Systemvetenskap", 180);
-    Student student = new Student(1L, "Maxime", program);
-    Course course = new Course("DA123A", "Java Programming", 7.5);
+
+
+    CourseFileRepository repository = new CourseFileRepository();
+    List<Course> courses = new ArrayList<>();
+
+    @AfterEach
+    void cleanUp() {
+        new File("testCourses.txt").delete();
+    }
+
     @Test
     void shouldCalculateCompletedCredits() {
-
+        Program program = new Program("Data och Systemvetenskap", 180);
+        Student student = new Student(1L, "Maxime", program);
+        Course course = new Course("DA123A", "Java Programming", 7.5);
 
         course.complete();
         student.addCourse(course);
         assertEquals(7.5, student.getCompletedCredits());
     }
+
     @Test
-    void shouldCalculateDegreeProgress(){
+    void shouldCalculateDegreeProgress() {
+        Program program = new Program("Data och Systemvetenskap", 180);
+        Student student = new Student(1L, "Maxime", program);
+
+        Course course = new Course("DA123A", "Java Programming", 7.5);
         course.complete();
         student.addCourse(course);
-        assertEquals( 4.166666666666666 , student.getDegreeProgress());
+        assertEquals(4.166666666666666, student.getDegreeProgress());
 
 
     }
 
     @Test
-    void shouldReturnZeroProgressWhenProgramRequiresZeroCredits(){
+    void shouldReturnZeroProgressWhenProgramRequiresZeroCredits() {
+        Course course = new Course("DA123A", "Java Programming", 7.5);
         Program testProgram = new Program("Test Program", 0);
         Student testStudent = new Student(1L, "Maxime", testProgram);
 
-        assertEquals(0 , testStudent.getDegreeProgress());
+        assertEquals(0, testStudent.getDegreeProgress());
     }
+
     @Test
-    void shouldCalculateCompletedCourses(){
+    void shouldCalculateCompletedCourses() {
+        Program program = new Program("Data och Systemvetenskap", 180);
+        Student student = new Student(1L, "Maxime", program);
+        Course course = new Course("DA123A", "Java Programming", 7.5);
         course.complete();
         student.addCourse(course);
         StudyStatistics statistics = new StudyStatistics(student);
         assertEquals(1, statistics.getCompletedCourses());
+
+
+    }
+
+    @Test
+    void shouldLoadCourseFromFile() throws IOException {
+        Course course = new Course("DA123A", "Java Programming", 7.5);
+        course.complete();
+        courses.add(course);
+
+        repository.saveCourses(courses, "testCourses.txt");
+        List<Course> loadedCourses = repository.loadCourses("testCourses.txt");
+        assertEquals(1, loadedCourses.size());
+        assertEquals("DA123A", loadedCourses.get(0).getCourseCode());
+        assertEquals("Java Programming", loadedCourses.get(0).getName());
+        assertEquals(7.5, loadedCourses.get(0).getCredits());
+        assertEquals(true, loadedCourses.get(0).isCompleted());
 
 
     }
