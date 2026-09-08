@@ -4,6 +4,7 @@ import com.studyplanner.model.Course;
 import com.studyplanner.model.Program;
 import com.studyplanner.model.Student;
 
+import com.studyplanner.service.StudyStatistics;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ public class StudentTest {
     void shouldCalculateDegreeProgress(){
         course.complete();
         student.addCourse(course);
-        assertEquals( 4.17 , student.getDegreeProgress());
+        assertEquals( 4.166666666666666 , student.getDegreeProgress());
 
 
     }
@@ -35,5 +36,14 @@ public class StudentTest {
         Student testStudent = new Student(1L, "Maxime", testProgram);
 
         assertEquals(0 , testStudent.getDegreeProgress());
+    }
+    @Test
+    void shouldCalculateCompletedCourses(){
+        course.complete();
+        student.addCourse(course);
+        StudyStatistics statistics = new StudyStatistics(student);
+        assertEquals(1, statistics.getCompletedCourses());
+
+
     }
 }

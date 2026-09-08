@@ -40,10 +40,19 @@ public class Main {
         System.out.println(
                 "Grade: "
                         + enrollment.getGrade());
+        StudyStatistics statistics =
+                new StudyStatistics(student);
 
-//        StudyReport report =
-//                new StudyReport(student);
-//
-//        report.generate();
+        System.out.println(
+                "Total Courses: "
+                        + statistics.getTotalCourses());
+
+        System.out.println(
+                "Completed Courses: "
+                        + statistics.getCompletedCourses());
+
+        System.out.println(
+                "Remaining Courses: "
+                        + statistics.getRemainingCourses());
     }
 }
