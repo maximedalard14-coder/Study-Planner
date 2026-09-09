@@ -28,16 +28,22 @@ public class Main {
                         "Java Programming",
                         7.5);
 
-        javaCourse.complete();
-
-        student.addCourse(javaCourse);
-
         Enrollment enrollment =
                 new Enrollment(
                         student,
                         javaCourse);
 
         enrollment.complete("A");
+
+        Course databaseCourse= new Course("DA234B" , "Databases" , 7.5);
+        Course algorithmsCourse = new Course("DA234C" , "Algorithms ", 7.5);
+        javaCourse.complete();
+        databaseCourse.complete();
+        algorithmsCourse.complete();
+        student.addCourse(javaCourse);
+        student.addCourse(databaseCourse);
+        student.addCourse(algorithmsCourse);
+
 
         System.out.println(enrollment);
 

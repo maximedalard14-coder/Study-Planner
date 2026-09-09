@@ -1,1 +1,3 @@
 DA123A,Java Programming,7.5,true
+DA234B,Databases,7.5,true
+DA234C,Algorithms ,7.5,true
