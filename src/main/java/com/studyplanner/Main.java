@@ -20,6 +20,7 @@ public class Main {
                         20060625L,
                         "mada4843",
                         sysdk);
+        StudyReport report = new StudyReport(student);
 
         Course javaCourse =
                 new Course(
@@ -81,6 +82,9 @@ public class Main {
         }
 
 
-
+        report.generate();
     }
+
+
+
 }

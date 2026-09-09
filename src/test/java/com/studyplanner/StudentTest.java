@@ -17,12 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StudentTest {
 
 
     CourseFileRepository repository = new CourseFileRepository();
-    List<Course> courses = new ArrayList<>();
+
 
     @AfterEach
     void cleanUp() {
@@ -77,6 +78,7 @@ public class StudentTest {
 
     @Test
     void shouldLoadCourseFromFile() throws IOException {
+        List<Course> courses = new ArrayList<>();
         Course course = new Course("DA123A", "Java Programming", 7.5);
         course.complete();
         courses.add(course);
@@ -87,7 +89,7 @@ public class StudentTest {
         assertEquals("DA123A", loadedCourses.get(0).getCourseCode());
         assertEquals("Java Programming", loadedCourses.get(0).getName());
         assertEquals(7.5, loadedCourses.get(0).getCredits());
-        assertEquals(true, loadedCourses.get(0).isCompleted());
+        assertTrue(loadedCourses.get(0).isCompleted());
 
 
     }
