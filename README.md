@@ -2,11 +2,9 @@
 
 A Java-based academic planning and progress management system designed to help university students manage courses, track earned credits, and monitor degree progression.
 
----
-
 ## Overview
 
-Study Planner is a personal software development project created to practice object-oriented programming, software architecture, and backend development using Java.
+Study Planner is a personal software development project created to improve my knowledge of object-oriented programming, software architecture, testing, and backend development using Java.
 
 The system helps students:
 
@@ -19,30 +17,27 @@ The system helps students:
 The project is being developed incrementally, starting with a strong domain model before introducing databases, APIs, security, and advanced analytics.
 
 ---
+
 ## Recent Milestones
 
 ### September 2026
 
-- Introduced Maven project structure
+- Migrated the project to a Maven-based structure
 - Added JUnit 5 automated testing
-- Implemented Program model
-- Implemented Enrollment model
-- Implemented StudyReport functionality
-- Added degree progression calculations
+- Implemented Program and Enrollment models
+- Implemented StudyStatistics service
+- Enhanced StudyReport with statistics and course overview
+- Added file-based persistence through CourseFileRepository
+- Added repository persistence tests
+
+---
 
 ## Current Features
-### Reporting
-
-- Generate study reports
-- Display completed credits
-- Display degree progression
-- Present academic overview
 
 ### Course Management
 
 - Create courses
-- Store course code
-- Store course name
+- Store course codes and names
 - Store credit values
 - Mark courses as completed
 
@@ -70,14 +65,49 @@ The project is being developed incrementally, starting with a strong domain mode
 - Calculate completed credits
 - Calculate completion percentage
 - Calculate degree progression toward graduation
-  
+
+### Reporting and Analytics
+
+- Generate study reports
+- Display completed and remaining courses
+- Display completed credits
+- Display degree progression
+- Display course overview
+
+### Data Persistence
+
+- Save courses to file
+- Load courses from file
+- Restore course data between application sessions
+
 ### Automated Testing
 
 - JUnit 5 unit testing
 - Maven test execution
-- Verification of completed credit calculations
-- Verification of degree progression calculations
+- Progression calculation tests
+- Statistics tests
+- Repository persistence tests
 - Edge case validation
+
+---
+
+## Architecture
+
+```text
+Model
+├── Program
+├── Student
+├── Course
+└── Enrollment
+
+Service
+├── StudyPlanner
+├── StudyStatistics
+└── StudyReport
+
+Repository
+└── CourseFileRepository
+```
 
 ---
 
@@ -95,82 +125,35 @@ Program
 
 ---
 
-## Core Classes
-
-### Program
-
-Represents an academic program and its degree requirements.
-
-### Student
-
-Represents a student enrolled in an academic program.
-
-### Course
-
-Represents a university course containing information such as:
-
-- Course code
-- Course name
-- Credits
-- Completion status
-
-### Enrollment
-
-Represents the relationship between a student and a course.
-
-Stores:
-
-- Student
-- Course
-- Grade
-- Completion status
-
-### StudyPlanner
-
-Central application class responsible for:
-
-- Managing courses
-- Tracking credits
-- Calculating completion statistics
-
----
-
 ## Example Usage
 
 ```java
-Program program =
-        new Program(
-                "Data and Systems Science",
-                180);
+StudyReport report =
+        new StudyReport(student);
 
-Student student =
-        new Student(
-                1L,
-                "Maxime",
-                program);
-
-Course javaCourse =
-        new Course(
-                "DA123A",
-                "Java Programming",
-                7.5);
-
-javaCourse.complete();
-
-student.addCourse(javaCourse);
-
-System.out.println(
-        student.getCompletedCredits());
-
-System.out.println(
-        student.getDegreeProgress());
+report.generate();
 ```
 
-### Output
+Example output:
 
 ```text
-7.5
-4.166666666666667
+===== STUDY REPORT =====
+
+Student: mada4843
+Program: Data och Systemvetenskap
+
+Completed credits: 7.5 hp
+Degree progress: 4.17%
+
+----- Statistics -----
+
+Total courses: 1
+Completed courses: 1
+Remaining courses: 0
+
+----- Course Overview -----
+
+DA123A - Java Programming (7.5 hp) - Completed
 ```
 
 ---
@@ -207,10 +190,8 @@ This project is used to improve and demonstrate knowledge of:
 - Domain modeling
 - Software architecture
 - Data structures
-- Algorithms
 - Version control with Git
 - Database design
-- Secure software development
 - Automated testing
 - Technical documentation
 
@@ -222,14 +203,12 @@ This project is used to improve and demonstrate knowledge of:
 
 - REST API using Spring Boot
 - Service layer architecture
-- Repository layer
 - Dependency injection
 
 ### Database Integration
 
 - PostgreSQL
 - JPA/Hibernate
-- Data persistence
 - Database migrations
 
 ### Security
@@ -259,19 +238,26 @@ Future versions may include recommendation systems capable of:
 
 ## Project Status
 
-The project now includes a complete core domain model, reporting functionality, Maven-based build management, and automated JUnit testing.
+The project currently includes:
+
+- Core domain model
+- Statistics and reporting
+- File-based persistence
+- Maven build management
+- Automated JUnit testing
 
 Current focus:
 
-- Statistics and analytics
-- Data persistence
-- Service layer refinement
+- Improving persistence and repository design
+- Expanding reporting and analytics
+- Preparing for future database integration
 
 Future focus:
 
 - Spring Boot REST API
 - PostgreSQL integration
 - Authentication and authorization
+- Docker support
 
 ---
 
@@ -285,6 +271,7 @@ This project serves as a portfolio project demonstrating:
 - Backend engineering
 - Software architecture
 - Git workflows
+- Automated testing
 - Database concepts
 - Professional software development practices
 
