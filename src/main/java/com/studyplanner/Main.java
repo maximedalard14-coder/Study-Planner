@@ -1,14 +1,16 @@
 package com.studyplanner;
 import com.studyplanner.model.*;
 import com.studyplanner.repository.CourseFileRepository;
+import com.studyplanner.repository.StudentFileRepository;
 import com.studyplanner.service.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Program sysdk =
                 new Program(
@@ -89,6 +91,17 @@ public class Main {
 
 
         report.generate();
+
+
+        StudentFileRepository studentFileRepository = new StudentFileRepository();
+        studentFileRepository.saveStudent(student, "student.txt");
+
+        Student loadedStudent = studentFileRepository.loadStudent("student.txt");
+        System.out.println("\nLoaded student: ");
+        System.out.println(loadedStudent.getId());
+        System.out.println(loadedStudent.getUserName());
+        System.out.println(loadedStudent.getProgram());
+        System.out.println(loadedStudent.getProgram().getRequiredCredits());
     }
 
 
