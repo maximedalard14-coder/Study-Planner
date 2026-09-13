@@ -10,24 +10,28 @@ public class StudyReport {
         this.student = student;
     }
 
-    public void generate(){
+    public String generate(){
+        StringBuilder report =
+                new StringBuilder();
         StudyStatistics statistics = new StudyStatistics(student);
 
-        System.out.println("\n===== STUDY REPORT =====");
+        report.append("\n===== STUDY REPORT =====");
 
-        System.out.println("Student: " + student.getUserName());
-        System.out.println("Program: " + student.getProgram().getName());
-        System.out.println("Completed credits: " + student.getCompletedCredits() + " hp" );
-        System.out.println("Degree progress: " + String.format("%.2f", student.getDegreeProgress()) + "%");
+        report.append("\nStudent: ").append(student.getUserName());
+        report.append("\nProgram: ").append(student.getProgram().getName());
 
-        System.out.println("\n----- Statistics -----");
-        System.out.println("Total courses: " +statistics.getTotalCourses());
-        System.out.println("Completed courses: " + statistics.getCompletedCourses());
-        System.out.println("Remaining courses: "+ statistics.getRemainingCourses());
-        System.out.println();
-        System.out.println("\n----- Course Overview -----");
+        report.append("\nCompleted credits: ").append(student.getCompletedCredits()).append(" hp");
+        report.append("\nDegree progress: ").append(String.format("%.2f", student.getDegreeProgress())).append("%");
+
+        report.append("\n----- Statistics -----");
+        report.append("\nTotal courses: ").append(statistics.getTotalCourses());
+        report.append("\nCompleted courses: ").append(statistics.getCompletedCourses());
+        report.append("\nRemaining courses: ").append(statistics.getRemainingCourses());
+        report.append("\n");
+        report.append("\n----- Course Overview -----");
         for(Course course: student.getCourses()){
-            System.out.println(course);
+            report.append("\n").append(course);
         }
+        return report.toString();
     }
 }

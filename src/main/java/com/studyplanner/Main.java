@@ -90,7 +90,7 @@ public class Main {
         }
 
 
-        report.generate();
+
 
 
         StudentFileRepository studentFileRepository = new StudentFileRepository();
@@ -102,6 +102,12 @@ public class Main {
         System.out.println(loadedStudent.getUserName());
         System.out.println(loadedStudent.getProgram());
         System.out.println(loadedStudent.getProgram().getRequiredCredits());
+
+
+
+
+        System.out.println(
+                report.generate());
     }
 
 
