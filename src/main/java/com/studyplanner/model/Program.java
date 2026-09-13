@@ -16,6 +16,24 @@ public class Program {
     public double getRequiredCredits() {
         return requiredCredits;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
+        if(obj == null || obj.getClass() != this.getClass()){
+            return false;
+        }
+        Program program = (Program) obj;
+        return Double.compare(program.requiredCredits, requiredCredits) == 0 && name.equals(program.name);
+    }
+
+    @Override
+    public int hashCode() {
+       int result = name.hashCode();
+       result = 31 * result + Double.hashCode(requiredCredits);
+       return result;
+    }
 
     @Override
     public String toString() {
