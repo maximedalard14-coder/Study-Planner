@@ -12,6 +12,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        Semester ht2026 = new Semester("HT26");
+
         Program sysdk =
                 new Program(
                         "Data och Systemvetenskap",
@@ -39,6 +41,9 @@ public class Main {
 
         Course databaseCourse= new Course("DA234B" , "Databases" , 7.5);
         Course algorithmsCourse = new Course("DA234C" , "Algorithms ", 7.5);
+        ht2026.addCourse(javaCourse);
+        ht2026.addCourse(databaseCourse);
+        ht2026.addCourse(algorithmsCourse);
         javaCourse.complete();
         databaseCourse.complete();
         algorithmsCourse.complete();
@@ -108,6 +113,11 @@ public class Main {
 
         System.out.println(
                 report.generate());
+
+        System.out.println(ht2026.getName());
+        for(Course course : ht2026.getCourses()){
+            System.out.println(course);
+        }
     }
 
 
