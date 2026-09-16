@@ -9,7 +9,7 @@ import java.util.List;
 public class CourseFileRepository {
 
     public void saveCourses(List<Course> courses, String fileName)
-        throws IOException {
+            throws IOException {
         FileWriter writer = new FileWriter(fileName);
         for(Course course : courses){
             writer.write(course.getCourseCode() +"," +course.getName()

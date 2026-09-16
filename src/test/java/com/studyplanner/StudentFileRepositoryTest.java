@@ -5,7 +5,7 @@ import com.studyplanner.model.Student;
 import com.studyplanner.repository.StudentFileRepository;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StudentFileRepositoryTest {
+class StudentFileRepositoryTest {
 
     @Test
     void shouldSaveAndLoadStudent() throws IOException{

@@ -13,14 +13,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CourseFileRepositoryTest {
+class CourseFileRepositoryTest {
 
-    private final String TEST_FILE = "testCourses.txt";
+    private final String testfile = "testCourses.txt";
     private final CourseFileRepository courseFileRepository = new CourseFileRepository();
 
     @AfterEach
     void cleanUp(){
-        new File(TEST_FILE).delete();
+        new File(testfile).delete();
     }
 
     @Test
@@ -30,8 +30,8 @@ public class CourseFileRepositoryTest {
         course.complete();
         courses.add(course);
 
-        courseFileRepository.saveCourses(courses, TEST_FILE);
-        List<Course> loadedCourses = courseFileRepository.loadCourses(TEST_FILE);
+        courseFileRepository.saveCourses(courses, testfile);
+        List<Course> loadedCourses = courseFileRepository.loadCourses(testfile);
         assertEquals(1, loadedCourses.size());
         assertEquals("DA123A", loadedCourses.get(0).getCourseCode());
         assertEquals("Java Programming", loadedCourses.get(0).getName());
@@ -50,8 +50,8 @@ public class CourseFileRepositoryTest {
         courses.add(databaseCourse);
         courses.add(algorithmsCourse);
 
-        courseFileRepository.saveCourses( courses , TEST_FILE);
-        List<Course> loadedCourses = courseFileRepository.loadCourses(TEST_FILE);
+        courseFileRepository.saveCourses( courses , testfile);
+        List<Course> loadedCourses = courseFileRepository.loadCourses(testfile);
 
         assertEquals(3 , loadedCourses.size());
     }
