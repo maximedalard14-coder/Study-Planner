@@ -8,16 +8,24 @@ public class Student {
     private final String userName;
     private final Program program;
     private final List<Course> courses;
+    private final List<Semester> semesters;
 
     public Student(Long id, String userName, Program program) {
         this.id = id;
         this.userName = userName;
         this.program = program;
         this.courses = new ArrayList<>();
+        this.semesters= new ArrayList<>();
     }
 
     public void addCourse(Course course) {
         this.courses.add(course);
+    }
+    public void addSemester(Semester semester){
+        semesters.add(semester);
+    }
+    public List<Semester> getSemesters(){
+        return new ArrayList<>(semesters);
     }
 
     public Long getId() {

@@ -1,18 +1,14 @@
 package com.studyplanner;
-import com.studyplanner.model.*;
-import com.studyplanner.repository.CourseFileRepository;
-import com.studyplanner.repository.StudentFileRepository;
-import com.studyplanner.service.*;
 
-import java.io.IOException;
-import java.util.List;
+import com.studyplanner.model.*;
+import com.studyplanner.service.SemesterStatistics;
+import com.studyplanner.service.StudyReport;
+import java.util.logging.Logger;
 
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-
-        Semester ht2026 = new Semester("HT26");
+    public static void main(String[] args) {
 
         Program sysdk =
                 new Program(
@@ -24,7 +20,9 @@ public class Main {
                         20060625L,
                         "mada4843",
                         sysdk);
-        StudyReport report = new StudyReport(student);
+
+        Semester ht2026 =
+                new Semester("HT2026");
 
         Course javaCourse =
                 new Course(
@@ -32,94 +30,43 @@ public class Main {
                         "Java Programming",
                         7.5);
 
-        Enrollment enrollment =
-                new Enrollment(
-                        student,
-                        javaCourse);
+        Course databaseCourse =
+                new Course(
+                        "DA234B",
+                        "Databases",
+                        7.5);
 
-        enrollment.complete("A");
+        Course algorithmsCourse =
+                new Course(
+                        "DA234C",
+                        "Algorithms",
+                        7.5);
 
-        Course databaseCourse= new Course("DA234B" , "Databases" , 7.5);
-        Course algorithmsCourse = new Course("DA234C" , "Algorithms ", 7.5);
-        ht2026.addCourse(javaCourse);
-        ht2026.addCourse(databaseCourse);
-        ht2026.addCourse(algorithmsCourse);
         javaCourse.complete();
         databaseCourse.complete();
         algorithmsCourse.complete();
+
+        ht2026.addCourse(javaCourse);
+        ht2026.addCourse(databaseCourse);
+        ht2026.addCourse(algorithmsCourse);
+
         student.addCourse(javaCourse);
         student.addCourse(databaseCourse);
         student.addCourse(algorithmsCourse);
 
+        student.addSemester(ht2026);
 
-        System.out.println(enrollment);
-
-        System.out.println(
-                "Grade: "
-                        + enrollment.getGrade());
-        StudyStatistics statistics =
-                new StudyStatistics(student);
-
-        System.out.println(
-                "Total Courses: "
-                        + statistics.getTotalCourses());
-
-        System.out.println(
-                "Completed Courses: "
-                        + statistics.getCompletedCourses());
-
-        System.out.println(
-                "Remaining Courses: "
-                        + statistics.getRemainingCourses());
-
-
-        CourseFileRepository repository = new CourseFileRepository();
-        try {
-            repository.saveCourses(student.getCourses(), "courses.txt");
-            System.out.println("Courses saved successfully");
-
-        }catch (Exception e) {
-            System.out.println("Error saving courses " + e.getMessage());
-            e.printStackTrace();
-        }
-        try {
-            System.out.println("\nLoading courses...");
-            List<Course> loadedCourses = repository.loadCourses("courses.txt");
-            for (Course course : loadedCourses){
-                System.out.println(course);
-            }
-
-        }catch (Exception e){
-            System.out.println("Something went wrong " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
-
-
-
-        StudentFileRepository studentFileRepository = new StudentFileRepository();
-        studentFileRepository.saveStudent(student, "student.txt");
-
-        Student loadedStudent = studentFileRepository.loadStudent("student.txt");
-        System.out.println("\nLoaded student: ");
-        System.out.println(loadedStudent.getId());
-        System.out.println(loadedStudent.getUserName());
-        System.out.println(loadedStudent.getProgram());
-        System.out.println(loadedStudent.getProgram().getRequiredCredits());
-
-
-
+        StudyReport report =
+                new StudyReport(student);
 
         System.out.println(
                 report.generate());
 
-        System.out.println(ht2026.getName());
-        for(Course course : ht2026.getCourses()){
-            System.out.println(course);
-        }
+        SemesterStatistics statistics = new SemesterStatistics(ht2026);
+
+        System.out.println("Semester: " + ht2026.getName());
+        System.out.println("Courses: " + statistics.getTotalCourses());
+        System.out.println("Credits: " + statistics.getTotalCredits());
+
     }
-
-
-
 }
