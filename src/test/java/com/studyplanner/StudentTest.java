@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StudentTest {
+class StudentTest {
 
 
     CourseFileRepository repository = new CourseFileRepository();
@@ -56,7 +56,6 @@ public class StudentTest {
 
     @Test
     void shouldReturnZeroProgressWhenProgramRequiresZeroCredits() {
-        Course course = new Course("DA123A", "Java Programming", 7.5);
         Program testProgram = new Program("Test Program", 0);
         Student testStudent = new Student(1L, "Maxime", testProgram);
 
