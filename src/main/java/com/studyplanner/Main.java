@@ -1,14 +1,17 @@
 package com.studyplanner;
 
 import com.studyplanner.model.*;
+import com.studyplanner.repository.StudentJsonRepository;
 import com.studyplanner.service.SemesterStatistics;
 import com.studyplanner.service.StudyReport;
+
+import java.io.IOException;
 import java.util.logging.Logger;
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Program sysdk =
                 new Program(
@@ -68,5 +71,10 @@ public class Main {
         System.out.println("Courses: " + statistics.getTotalCourses());
         System.out.println("Credits: " + statistics.getTotalCredits());
 
+
+        StudentJsonRepository  studentJsonRepository = new StudentJsonRepository();
+        studentJsonRepository.saveStudent(student);
+        Student loadedStudent = studentJsonRepository.loadStudent();
+        System.out.println(loadedStudent);
     }
 }

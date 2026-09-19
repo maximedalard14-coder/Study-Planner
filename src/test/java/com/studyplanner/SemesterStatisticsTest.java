@@ -34,4 +34,32 @@ class SemesterStatisticsTest {
 
         assertEquals(22.5, statistics.getCompletedCredits());
     }
+
+    @Test
+    void shouldCalculateTotalCredits(){
+        Semester semester = new Semester("HT2026");
+
+        Course logicCourse = new Course("DA123D", "Logic", 7.5);
+
+        Course javaCourse = new Course("DA123A", "Java Programming", 7.5);
+
+        Course databaseCourse = new Course("DA234B", "Databases", 7.5);
+
+        Course algorithmsCourse = new Course("DA234C", "Algorithms", 7.5);
+
+
+        javaCourse.complete();
+        databaseCourse.complete();
+        algorithmsCourse.complete();
+
+        semester.addCourse(logicCourse);
+        semester.addCourse(javaCourse);
+        semester.addCourse(databaseCourse);
+        semester.addCourse(algorithmsCourse);
+
+        SemesterStatistics statistics = new SemesterStatistics(semester);
+
+        assertEquals(30.0, statistics.getTotalCredits());
+
+    }
 }

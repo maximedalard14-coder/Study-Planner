@@ -1,7 +1,7 @@
 package com.studyplanner.model;
 
 public class Course {
-    private final String courseCode;
+    private  String courseCode;
     private String name;
     private boolean completed;
     private double credits;
@@ -11,6 +11,11 @@ public class Course {
         this.name = name;
         this.credits = credits;
         this.completed = false;
+    }
+    public Course(){}
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public boolean isCompleted() {

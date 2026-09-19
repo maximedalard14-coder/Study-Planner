@@ -1,14 +1,15 @@
 package com.studyplanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
-    private final Long id;
-    private final String userName;
-    private final Program program;
-    private final List<Course> courses;
-    private final List<Semester> semesters;
+    private  Long id;
+    private  String userName;
+    private  Program program;
+    private  List<Course> courses;
+    private  List<Semester> semesters;
 
     public Student(Long id, String userName, Program program) {
         this.id = id;
@@ -16,6 +17,26 @@ public class Student {
         this.program = program;
         this.courses = new ArrayList<>();
         this.semesters= new ArrayList<>();
+    }
+
+    public Student(){}
+
+    public void setId(Long id){
+        this.id =  id;
+    }
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void setSemesters(List<Semester> semesters) {
+        this.semesters = semesters;
     }
 
     public void addCourse(Course course) {
@@ -44,6 +65,7 @@ public class Student {
         return userName;
     }
 
+    @JsonIgnore
     public double getCompletedCredits() {
         double credits = 0;
 
@@ -54,7 +76,7 @@ public class Student {
         }
         return credits;
     }
-
+    @JsonIgnore
     public double getDegreeProgress() {
         if (program.getRequiredCredits() == 0) {
             return 0.0;
@@ -63,4 +85,18 @@ public class Student {
                 / program.getRequiredCredits())
                 * 100;
     }
+
+    @Override
+    public String toString() {
+
+        return "Student{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", program=" + program +
+                ", courses=" + courses.size() +
+                ", semesters=" + semesters.size() +
+                '}';
+    }
+
+
 }

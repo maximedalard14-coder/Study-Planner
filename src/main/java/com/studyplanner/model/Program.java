@@ -1,11 +1,19 @@
 package com.studyplanner.model;
 
 public class Program {
-    private final String name;
-    private final double requiredCredits;
+    private  String name;
+    private double requiredCredits;
 
     public Program(String name, double requiredCredits) {
         this.name = name;
+        this.requiredCredits = requiredCredits;
+    }
+    public Program(){}
+
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setRequiredCredits(double requiredCredits){
         this.requiredCredits = requiredCredits;
     }
 
