@@ -3,26 +3,21 @@ package com.studyplanner.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studyplanner.model.Student;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.io.IOException;
 
 public class StudentJsonRepository {
 
-    private final ObjectMapper mapper =
-            new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    public void saveStudent(
-            Student student)
-            throws IOException {
+    public void saveStudent(Student student, Path path) throws IOException {
 
-        mapper.writeValue(
-                new File("student.json"),
-                student);
+        mapper.writeValue(path.toFile(), student);
     }
 
-    public Student loadStudent() throws IOException{
+    public Student loadStudent(Path path) throws IOException {
 
-        return mapper.readValue(new File( "student.json") , Student.class) ;
+        return mapper.readValue(path.toFile() , Student.class);
 
     }
 }

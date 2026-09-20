@@ -6,7 +6,7 @@ import com.studyplanner.service.SemesterStatistics;
 import com.studyplanner.service.StudyReport;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.nio.file.Path;
 
 
 public class Main {
@@ -71,10 +71,10 @@ public class Main {
         System.out.println("Courses: " + statistics.getTotalCourses());
         System.out.println("Credits: " + statistics.getTotalCredits());
 
-
+        Path studentFile = Path.of("student.json");
         StudentJsonRepository  studentJsonRepository = new StudentJsonRepository();
-        studentJsonRepository.saveStudent(student);
-        Student loadedStudent = studentJsonRepository.loadStudent();
+        studentJsonRepository.saveStudent(student, studentFile);
+        Student loadedStudent = studentJsonRepository.loadStudent(studentFile);
         System.out.println(loadedStudent);
     }
 }
