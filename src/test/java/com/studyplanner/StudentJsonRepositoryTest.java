@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,6 +63,48 @@ class StudentJsonRepositoryTest {
         assertEquals("HT2026" , loadedSemester.getName());
         assertEquals(2 , loadedSemester.getCourses().size() ,  "Semester.courses borde ha bevarats genom JSON round-trip");
 
+
+    }
+
+    @Test
+    void findStudentShouldReturnEmptyWhenFileDOesNotExist() throws IOException {
+
+        Path missing = tempDir.resolve("does-not-exist.json");
+        StudentJsonRepository repository = new StudentJsonRepository();
+
+        Optional<Student> result = repository.findStudent(missing);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void loadStudentShouldIgnoreUnknownJsonFields() throws IOException{
+        Path file = tempDir.resolve("student-with-extra-fields.json");
+        Files.writeString(file , """ 
+              {
+              "id": 1,
+              "userName": "mada4843",
+              "program": { "name": "Data och Systemvetenskap", "requiredCredits": 180.0 },
+              "courses": [],
+              "semesters": [],
+              "futureFieldWeDontKnowYet": "ignored"
+            }
+            """);
+
+        StudentJsonRepository repository = new StudentJsonRepository();
+        Student loadedStudent = repository.loadStudent(file);
+
+        assertEquals("mada4843" , loadedStudent.getUserName());
+
+    }
+
+    @Test
+    void loadStudentShouldThrowOnInvalidJson() throws IOException{
+        Path file = tempDir.resolve("broken.json");
+        Files.writeString(file , "{this is not json}");
+        StudentJsonRepository repository = new StudentJsonRepository();
+
+        assertThrows(IOException.class, () -> repository.loadStudent(file));
 
     }
 }
