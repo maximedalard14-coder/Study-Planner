@@ -18,6 +18,10 @@ public class Course {
         this.courseCode = courseCode;
     }
 
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public boolean isCompleted() {
         return completed;
     }
