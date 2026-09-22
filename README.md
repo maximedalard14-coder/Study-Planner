@@ -268,13 +268,79 @@ Tests use JUnit 5's `@TempDir`, which creates a fresh temporary directory per te
 
 ## Design Notes
 
-A few areas of the domain model are intentionally still under review and will be revisited before database integration:
+The domain model has been reviewed and clarified before database integration. These decisions define where authoritative data lives and how it is reached.
 
-- **Course ownership.** `Student` currently holds both a direct list of courses and a list of semesters (which themselves hold courses). Ownership should be clarified so there is a single source of truth.
-- **Course completion state.** Completion is stored on `Course` and also tracked on `Enrollment`. One of these should become the authoritative source.
-- **Derived values.** Degree progress and completed credits are calculated, not stored. This will remain true when persistence moves to a database.
+### Domain ownership
 
-These decisions will be documented and migrated in small steps with tests, rather than as a single large refactor.
+**`Course` is a shared catalogue entity.**
+A `Course` describes a course once and is shared across all students. It carries only static information: `id`, `courseCode`, `name`, and `credits`. It does not carry `completed` or `grade`, because those describe a student's relationship with the course, not the course itself.
+
+**`Enrollment` is the single source of truth.**
+All information about a student taking a course lives on `Enrollment`:
+
+- which student
+- which course
+- which semester the student was registered in
+- completion status
+- grade
+
+There is exactly one place where "has completed" is stored.
+
+**`Student` owns enrollments and semesters.**
+`Student` has a `List<Enrollment>` and a `List<Semester>`. The previous `Student.courses` list has been removed. Courses reachable from a student are derived through enrollments.
+
+**`Semester` is a planning entity.**
+A `Semester` represents an academic term and is owned by `Student`. `Semester` does not own a list of courses. Courses taken in a semester are derived by filtering the student's enrollments:
+
+```java
+student.getEnrollments().stream()
+       .filter(e -> e.getSemester().equals(ht26))
+       .map(Enrollment::getCourse)
+       .toList();
+```
+
+### Identifiers
+
+- `Course` has a `Long id` supplied by the caller. This prepares the model for a database primary key without changing the API later.
+- `Enrollment` has no separate id. Its identity is the tuple `(student, course, semester)`, which is unique by construction.
+
+### Constraints
+
+- A student may not be enrolled in the same course twice within the same semester.
+- A student may enrol in the same course again in a later semester, for example to retake a failed course.
+- Completion is not tied to the semester of enrolment. A course may be marked as completed later than the term in which the student was registered.
+
+### Semester naming
+
+`Semester.name` uses a strict format: `HTxx` (autumn term) or `VTxx` (spring term), where `xx` is a two-digit year. Examples: `HT26`, `VT27`. No other formats are accepted.
+
+### JSON persistence
+
+Circular references between `Student` and `Enrollment` are handled with Jackson's `@JsonManagedReference` and `@JsonBackReference`. The student side is the managed reference and is serialized; the enrollment's back-reference to its student is not serialized, and is restored on load.
+
+Derived values (`completedCredits`, `degreeProgress`) remain excluded from JSON with `@JsonIgnore` and are recalculated on load.
+
+### Removed
+
+- `Course.completed` and `Course.complete()` — completion now lives on `Enrollment`.
+- `Student.courses` — courses are reached through enrollments.
+- `Semester.courses` — courses in a semester are derived from enrollments.
+- `CourseFileRepository` and `StudentFileRepository` — the older text-based persistence is superseded by JSON. The code remains available in Git history.
+
+### Migration plan
+
+The refactor is performed in small, individually reviewable commits:
+
+1. Documentation: this section.
+2. Add `Enrollment.semester` and `Student.enrollments` (additive, no breakage).
+3. Move `Student` credit calculations to enrollments.
+4. Move `StudyStatistics` and `SemesterStatistics` to enrollments.
+5. Remove `Course.completed`.
+6. Remove `Semester.courses`.
+7. Remove `Student.courses`.
+8. Update `Main` and `StudentJsonRepository`.
+9. Remove old text repositories.
+10. Update README feature and architecture sections.
 
 ---
 
