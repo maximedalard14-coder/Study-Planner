@@ -22,7 +22,6 @@ public class Main {
         Course databaseCourse = new Course(2L, "DA234B", "Databases", 7.5);
         Course algorithmsCourse = new Course(3L, "DA234C", "Algorithms", 7.5);
 
-        // Enrollments are the source of truth for completion.
         Enrollment javaEnrollment = new Enrollment(student, javaCourse, ht26);
         Enrollment dbEnrollment = new Enrollment(student, databaseCourse, ht26);
         Enrollment algoEnrollment = new Enrollment(student, algorithmsCourse, ht26);
@@ -39,11 +38,6 @@ public class Main {
         ht26.addCourse(databaseCourse);
         ht26.addCourse(algorithmsCourse);
         student.addSemester(ht26);
-
-        // Legacy list, still used by StudyStatistics until Commit 4.
-        student.addCourse(javaCourse);
-        student.addCourse(databaseCourse);
-        student.addCourse(algorithmsCourse);
 
         StudyReport report = new StudyReport(student);
         System.out.println(report.generate());

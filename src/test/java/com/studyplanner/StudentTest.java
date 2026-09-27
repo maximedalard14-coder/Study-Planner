@@ -72,13 +72,15 @@ class StudentTest {
     void shouldCalculateCompletedCourses() {
         Program program = new Program("Data och Systemvetenskap", 180);
         Student student = new Student(1L, "Maxime", program);
-        Course course = new Course("DA123A", "Java Programming", 7.5);
-        course.complete();
-        student.addCourse(course);
+        Semester semester = new Semester("HT26");
+        Course course = new Course(1L, "DA123A", "Java Programming", 7.5);
+
+        Enrollment enrollment = new Enrollment(student, course, semester);
+        enrollment.complete("A");
+        student.addEnrollment(enrollment);
+
         StudyStatistics statistics = new StudyStatistics(student);
         assertEquals(1, statistics.getCompletedCourses());
-
-
     }
 
     @Test

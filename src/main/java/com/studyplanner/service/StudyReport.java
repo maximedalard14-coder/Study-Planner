@@ -2,6 +2,7 @@ package com.studyplanner.service;
 
 import com.studyplanner.model.Student;
 import com.studyplanner.model.Course;
+import com.studyplanner.model.Enrollment;
 
 public class StudyReport {
     private final Student student;
@@ -29,8 +30,15 @@ public class StudyReport {
         report.append("\nRemaining courses: ").append(statistics.getRemainingCourses());
         report.append("\n");
         report.append("\n----- Course Overview -----");
-        for(Course course: student.getCourses()){
-            report.append("\n").append(course);
+        for(Enrollment enrollment: student.getEnrollments()){
+            Course course = enrollment.getCourse();
+            report.append("\n").append(course.getCourseCode())
+                    .append(" - ")
+                    .append(course.getName())
+                    .append(" (")
+                    .append(course.getCredits())
+                    .append(" hp) - ")
+                    .append(enrollment.isCompleted() ? "Completed" : "Not completed");
         }
         return report.toString();
     }
