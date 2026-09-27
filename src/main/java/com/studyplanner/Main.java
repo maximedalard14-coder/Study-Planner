@@ -40,7 +40,7 @@ public class Main {
         ht26.addCourse(algorithmsCourse);
         student.addSemester(ht26);
 
-        // Legacy course list kept until Commit 7.
+        // Legacy list, still used by StudyStatistics until Commit 4.
         student.addCourse(javaCourse);
         student.addCourse(databaseCourse);
         student.addCourse(algorithmsCourse);

@@ -3,6 +3,8 @@ package com.studyplanner;
 import com.studyplanner.model.Course;
 import com.studyplanner.model.Program;
 import com.studyplanner.model.Student;
+import com.studyplanner.model.Enrollment;
+import com.studyplanner.model.Semester;
 
 import com.studyplanner.repository.CourseFileRepository;
 import com.studyplanner.service.StudyStatistics;
@@ -34,24 +36,28 @@ class StudentTest {
     void shouldCalculateCompletedCredits() {
         Program program = new Program("Data och Systemvetenskap", 180);
         Student student = new Student(1L, "Maxime", program);
-        Course course = new Course("DA123A", "Java Programming", 7.5);
+        Semester semester = new Semester("HT26");
+        Course course = new Course(1L, "DA123A", "Java Programming", 7.5);
 
-        course.complete();
-        student.addCourse(course);
-        assertEquals(7.5, student.getCompletedCredits());
+        Enrollment enrollment = new Enrollment(student, course, semester);
+        enrollment.complete("A");
+        student.addEnrollment(enrollment);
+
+        assertEquals(7.5, student.getCompletedCredits(), 0.001);
     }
 
     @Test
     void shouldCalculateDegreeProgress() {
         Program program = new Program("Data och Systemvetenskap", 180);
         Student student = new Student(1L, "Maxime", program);
+        Semester semester = new Semester("HT26");
+        Course course = new Course(1L, "DA123A", "Java Programming", 7.5);
 
-        Course course = new Course("DA123A", "Java Programming", 7.5);
-        course.complete();
-        student.addCourse(course);
-        assertEquals(4.166666666666666, student.getDegreeProgress());
+        Enrollment enrollment = new Enrollment(student, course, semester);
+        enrollment.complete("A");
+        student.addEnrollment(enrollment);
 
-
+        assertEquals(4.1667, student.getDegreeProgress(), 0.001);
     }
 
     @Test
