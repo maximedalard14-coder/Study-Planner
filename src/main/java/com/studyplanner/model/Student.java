@@ -95,9 +95,9 @@ public class Student {
     public double getCompletedCredits() {
         double credits = 0;
 
-        for (Course course : courses) {
-            if (course.isCompleted()) {
-                credits += course.getCredits();
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.isCompleted() && enrollment.getCourse() != null) {
+                credits += enrollment.getCourse().getCredits();
             }
         }
         return credits;
@@ -105,7 +105,7 @@ public class Student {
 
     @JsonIgnore
     public double getDegreeProgress() {
-        if (program.getRequiredCredits() == 0) {
+        if (program == null || program.getRequiredCredits() == 0) {
             return 0.0;
         }
         return (getCompletedCredits()
