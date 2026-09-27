@@ -1,32 +1,42 @@
 package com.studyplanner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
-    private  Long id;
-    private  String userName;
-    private  Program program;
-    private  List<Course> courses;
-    private  List<Semester> semesters;
+    private Long id;
+    private String userName;
+    private Program program;
+    private List<Course> courses;
+    private List<Semester> semesters;
+    private List<Enrollment> enrollments;
 
     public Student(Long id, String userName, Program program) {
         this.id = id;
         this.userName = userName;
         this.program = program;
         this.courses = new ArrayList<>();
-        this.semesters= new ArrayList<>();
+        this.semesters = new ArrayList<>();
+        this.enrollments = new ArrayList<>();
     }
 
-    public Student(){}
-
-    public void setId(Long id){
-        this.id =  id;
+    public Student() {
+        this.courses = new ArrayList<>();
+        this.semesters = new ArrayList<>();
+        this.enrollments = new ArrayList<>();
     }
-    public void setUserName(String userName){
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public void setProgram(Program program) {
         this.program = program;
     }
@@ -39,13 +49,29 @@ public class Student {
         this.semesters = semesters;
     }
 
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        enrollment.setStudent(this);
+        this.enrollments.add(enrollment);
+    }
+
+    @JsonManagedReference
+    public List<Enrollment> getEnrollments() {
+        return new ArrayList<>(enrollments);
+    }
+
     public void addCourse(Course course) {
         this.courses.add(course);
     }
-    public void addSemester(Semester semester){
+
+    public void addSemester(Semester semester) {
         semesters.add(semester);
     }
-    public List<Semester> getSemesters(){
+
+    public List<Semester> getSemesters() {
         return new ArrayList<>(semesters);
     }
 
@@ -76,6 +102,7 @@ public class Student {
         }
         return credits;
     }
+
     @JsonIgnore
     public double getDegreeProgress() {
         if (program.getRequiredCredits() == 0) {
@@ -95,6 +122,7 @@ public class Student {
                 ", program=" + program +
                 ", courses=" + courses.size() +
                 ", semesters=" + semesters.size() +
+                ", enrollments=" + enrollments.size() +
                 '}';
     }
 
