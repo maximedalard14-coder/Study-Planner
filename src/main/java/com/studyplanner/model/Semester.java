@@ -32,4 +32,20 @@ public class Semester {
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        Semester semester = (Semester) o;
+        return name != null && name.equals(semester.name);
+    }
+
+    public int hashCode(){
+        return name != null ? name.hashCode() : 0;
+    }
 }
