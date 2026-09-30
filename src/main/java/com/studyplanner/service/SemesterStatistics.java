@@ -1,44 +1,65 @@
 package com.studyplanner.service;
-import com.studyplanner.model.Course;
+
+import com.studyplanner.model.Enrollment;
 import com.studyplanner.model.Semester;
+import com.studyplanner.model.Student;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SemesterStatistics {
 
+    private final Student student;
     private final Semester semester;
 
-    public SemesterStatistics(Semester semester) {
+    public SemesterStatistics(Student student, Semester semester) {
+        this.student = student;
         this.semester = semester;
     }
 
-    public int getTotalCourses(){
-        return semester.getCourses().size();
-    }
-    public double getTotalCredits(){
-        double totalCredits = 0;
-
-        for(Course course : semester.getCourses()){
-            totalCredits += course.getCredits();
-        }
-        return totalCredits;
-    }
-    public double getCompletedCredits(){
-        double completedCredits = 0;
-        for(Course course : semester.getCourses()){
-            if(course.isCompleted()){
-                completedCredits += course.getCredits();
+    private List<Enrollment> enrollmentsInSemester() {
+        List<Enrollment> result = new ArrayList<>();
+        for (Enrollment enrollment : student.getEnrollments()) {
+            if (semester.equals(enrollment.getSemester())) {
+                result.add(enrollment);
             }
         }
-        return completedCredits;
+        return result;
     }
-    public int getCompletedCourses(){
-        int completedCourses = 0;
-        for(Course course : semester.getCourses()){
-            if(course.isCompleted()){
-                completedCourses += 1;
+
+    public int getTotalCourses() {
+        return enrollmentsInSemester().size();
+    }
+
+    public double getTotalCredits() {
+        double total = 0;
+        for (Enrollment enrollment : enrollmentsInSemester()) {
+            if (enrollment.getCourse() != null) {
+                total += enrollment.getCourse().getCredits();
             }
         }
-        return completedCourses;
+        return total;
     }
 
+    public double getCompletedCredits() {
+        double completed = 0;
+        for (Enrollment enrollment : enrollmentsInSemester()) {
+            if (enrollment.isCompleted() && enrollment.getCourse() != null) {
+                completed += enrollment.getCourse().getCredits();
+            }
+        }
+        return completed;
+    }
 
+    public int getCompletedCourses() {
+        int count = 0;
+        for (Enrollment enrollment : enrollmentsInSemester()) {
+            if (enrollment.isCompleted()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
+
+
