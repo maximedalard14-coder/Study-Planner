@@ -2,26 +2,28 @@ package com.studyplanner.model;
 
 public class Course {
     private Long id;
-    private  String courseCode;
+    private String courseCode;
     private String name;
-    private boolean completed;
     private double credits;
 
-    public Course(Long id ,String courseCode, String name, double credits) {
+    public Course(Long id, String courseCode, String name, double credits) {
         this.id = id;
         this.courseCode = courseCode;
         this.name = name;
         this.credits = credits;
-        this.completed = false;
     }
+    @Deprecated
     public Course(String courseCode, String name, double credits) {
         this(null, courseCode, name, credits);
     }
-    public Course(){}
+
+    public Course() {
+    }
 
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -30,20 +32,8 @@ public class Course {
         this.courseCode = courseCode;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
     public String getCourseCode() {
         return courseCode;
-    }
-
-    public void complete() {
-        this.completed = true;
     }
 
     public void setName(String name) {
@@ -69,7 +59,6 @@ public class Course {
                 name +
                 " (" +
                 credits +
-                " hp) - " +
-                (completed ? "Completed" : "Not completed");
+                " hp)";
     }
 }
