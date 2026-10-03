@@ -1,0 +1,11 @@
+com\studyplanner\model\Semester.class
+com\studyplanner\model\Enrollment.class
+com\studyplanner\service\SemesterStatistics.class
+com\studyplanner\model\Student.class
+com\studyplanner\repository\StudentJsonRepository.class
+com\studyplanner\model\Course.class
+com\studyplanner\service\StudyReport.class
+com\studyplanner\Main.class
+com\studyplanner\model\Program.class
+com\studyplanner\service\StudyStatistics.class
+com\studyplanner\repository\StudentFileRepository.class

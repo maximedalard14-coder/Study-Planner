@@ -1,0 +1,7 @@
+com\studyplanner\SemesterTest.class
+com\studyplanner\StudentFileRepositoryTest.class
+com\studyplanner\repository\StudentJsonRepositoryTest.class
+com\studyplanner\EnrollmentTest.class
+com\studyplanner\StudentTest.class
+com\studyplanner\StudyReportTest.class
+com\studyplanner\SemesterStatisticsTest.class
