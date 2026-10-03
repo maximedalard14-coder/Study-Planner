@@ -34,15 +34,12 @@ public class Main {
         student.addEnrollment(dbEnrollment);
         student.addEnrollment(algoEnrollment);
 
-        ht26.addCourse(javaCourse);
-        ht26.addCourse(databaseCourse);
-        ht26.addCourse(algorithmsCourse);
         student.addSemester(ht26);
 
         StudyReport report = new StudyReport(student);
         System.out.println(report.generate());
 
-        SemesterStatistics statistics = new SemesterStatistics(ht26);
+        SemesterStatistics statistics = new SemesterStatistics(student, ht26);
         System.out.println("Semester: " + ht26.getName());
         System.out.println("Courses: " + statistics.getTotalCourses());
         System.out.println("Credits: " + statistics.getTotalCredits());
