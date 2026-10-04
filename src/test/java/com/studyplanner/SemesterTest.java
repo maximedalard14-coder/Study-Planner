@@ -1,38 +1,27 @@
 package com.studyplanner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
+import com.studyplanner.model.Semester;
 import org.junit.jupiter.api.Test;
-import com.studyplanner.model.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class SemesterTest {
 
     @Test
-    void shouldAddCourseToSemester() {
-        Semester ht2026 = new Semester("HT26");
-        Course javaCourse = new Course("DA123B", "Java programming", 7.5);
+    void semestersWithSameNameShouldBeEqual() {
+        Semester a = new Semester("HT26");
+        Semester b = new Semester("HT26");
 
-        ht2026.addCourse(javaCourse);
-
-        assertEquals(1, ht2026.getCourses().size());
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
     }
 
     @Test
-    void shouldStoreSemesterName() {
-        Semester ht2026 = new Semester("HT26");
-        assertEquals("HT26", ht2026.getName());
-    }
+    void semestersWithDifferentNamesShouldNotBeEqual() {
+        Semester a = new Semester("HT26");
+        Semester b = new Semester("VT27");
 
-    @Test
-    void shouldAddMultipleCourses() {
-        Semester ht2026 = new Semester("HT26");
-        ht2026.addCourse(new Course("DA123A", "Java Programming", 7.5));
-        ht2026.addCourse(new Course("DA234B", "Databases", 7.5));
-        ht2026.addCourse(new Course("DA345C", "Algorithms", 7.5));
-
-
-
-        assertEquals(3, ht2026.getCourses().size());
+        assertNotEquals(a, b);
     }
 }

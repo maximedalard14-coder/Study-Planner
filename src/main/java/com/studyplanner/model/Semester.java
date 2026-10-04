@@ -1,32 +1,17 @@
 package com.studyplanner.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Semester {
-    private  String name;
-    private  List<Course> courses;
+    private String name;
 
     public Semester(String name) {
         this.name = name;
-        this.courses = new ArrayList<>();
     }
-    public Semester(){}
 
-    public void setName(String name){
+    public Semester() {
+    }
+
+    public void setName(String name) {
         this.name = name;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-    public void addCourse(Course course) {
-        courses.add(course);
-    }
-
-    public List<Course> getCourses() {
-        return new ArrayList<>(courses);
     }
 
     public String getName() {
@@ -34,18 +19,24 @@ public class Semester {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(this == o){
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()){
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Semester semester = (Semester) o;
-        return name != null && name.equals(semester.name);
+        Semester other = (Semester) obj;
+        return name != null && name.equals(other.name);
     }
 
-    public int hashCode(){
+    @Override
+    public int hashCode() {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
