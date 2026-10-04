@@ -2,6 +2,7 @@ package com.studyplanner.repository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.studyplanner.model.Student;
 
 import java.io.File;
@@ -15,7 +16,9 @@ public class StudentJsonRepository {
     private final ObjectMapper mapper;
 
     public StudentJsonRepository() {
-        this.mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES , false);
+        this.mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .enable(SerializationFeature.INDENT_OUTPUT);
     }
 
 

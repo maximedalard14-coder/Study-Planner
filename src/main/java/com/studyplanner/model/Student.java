@@ -10,7 +10,6 @@ public class Student {
     private Long id;
     private String userName;
     private Program program;
-    private List<Course> courses;
     private List<Semester> semesters;
     private List<Enrollment> enrollments;
 
@@ -18,13 +17,13 @@ public class Student {
         this.id = id;
         this.userName = userName;
         this.program = program;
-        this.courses = new ArrayList<>();
+
         this.semesters = new ArrayList<>();
         this.enrollments = new ArrayList<>();
     }
 
     public Student() {
-        this.courses = new ArrayList<>();
+
         this.semesters = new ArrayList<>();
         this.enrollments = new ArrayList<>();
     }
@@ -41,9 +40,7 @@ public class Student {
         this.program = program;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
+
 
     public void setSemesters(List<Semester> semesters) {
         this.semesters = semesters;
@@ -63,9 +60,6 @@ public class Student {
         return new ArrayList<>(enrollments);
     }
 
-    public void addCourse(Course course) {
-        this.courses.add(course);
-    }
 
     public void addSemester(Semester semester) {
         semesters.add(semester);
@@ -83,9 +77,7 @@ public class Student {
         return program;
     }
 
-    public List<Course> getCourses() {
-        return new ArrayList<>(courses);
-    }
+
 
     public String getUserName() {
         return userName;
@@ -120,7 +112,6 @@ public class Student {
                 "id=" + id +
                 ", userName='" + userName + '\'' +
                 ", program=" + program +
-                ", courses=" + courses.size() +
                 ", semesters=" + semesters.size() +
                 ", enrollments=" + enrollments.size() +
                 '}';
