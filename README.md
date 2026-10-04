@@ -27,27 +27,33 @@ The project is being developed incrementally, starting with a strong domain mode
 - Implemented `Program`, `Student`, `Course`, `Semester`, and `Enrollment` models
 - Implemented `StudyStatistics` and `SemesterStatistics` services
 - Enhanced `StudyReport` with statistics and course overview
-- Added text-file persistence through `CourseFileRepository` and `StudentFileRepository`
 - Added JSON persistence through `StudentJsonRepository` using Jackson
 - Refactored `StudentJsonRepository` to a path-based API
 - Added JSON round-trip and error-handling tests using `@TempDir`
+
+### October 2026
+
+- Clarified the domain model: `Enrollment` is now the single source of truth for a student's courses, completion status, and grades
+- `Course` became a pure catalogue entity (no completion state)
+- `Semester` became a pure planning entity (no course list)
+- `Student` no longer holds a course list; courses are reached through enrollments
+- Removed the legacy `StudyPlanner`, `CourseFileRepository`, and `StudentFileRepository` classes
+- Enabled pretty-printed JSON output
 
 ---
 
 ## Current Features
 
-### Course Management
+### Course Catalogue
 
-- Create courses
-- Store course codes and names
-- Store credit values
-- Mark courses as completed
+- Create courses with a stable `id`, course code, name, and credits
+- Courses are shared across students
 
 ### Student Management
 
 - Create students
-- Assign courses
-- Track completed credits
+- Assign academic programmes
+- Track enrollments and semesters
 
 ### Academic Programs
 
@@ -58,14 +64,14 @@ The project is being developed incrementally, starting with a strong domain mode
 ### Enrollment Management
 
 - Register students in courses
-- Track enrollment status
+- Link each enrollment to a semester
+- Track completion status
 - Store grades
 
 ### Semester Management
 
-- Create semesters
-- Add courses to a semester
-- Retrieve courses per semester
+- Plan semesters for a student
+- Derive the courses taken in a semester from enrollments
 
 ### Progress Tracking
 
@@ -85,10 +91,9 @@ The project is being developed incrementally, starting with a strong domain mode
 
 ### Data Persistence
 
-- Save and load courses to/from text files
-- Save and load students to/from text files
-- Save and load complete student graphs as JSON (program, courses, semesters)
+- Save and load the full student graph as JSON (program, semesters, enrollments, courses)
 - Path-based repository API (no hardcoded filenames)
+- Pretty-printed JSON output
 - Graceful handling of missing files (`Optional`) and unknown JSON fields
 
 ### Automated Testing
@@ -96,8 +101,7 @@ The project is being developed incrementally, starting with a strong domain mode
 - JUnit 5 unit testing
 - Maven test execution
 - Progression calculation tests
-- Statistics tests
-- Repository persistence tests (text and JSON)
+- Statistics tests (student and semester level)
 - JSON round-trip tests using `@TempDir`
 - Edge case validation
 
@@ -114,31 +118,50 @@ Model
 └── Enrollment
 
 Service
-├── StudyPlanner
 ├── StudyStatistics
 ├── SemesterStatistics
 └── StudyReport
 
 Repository
-├── CourseFileRepository
-├── StudentFileRepository
 └── StudentJsonRepository
 ```
 
 ---
 
-## Domain Model
+## Data Model
+
+The model follows a clear ownership rule: **`Enrollment` is the single source of truth for a student's relationship with a course.**
 
 ```text
 Program
 │
 └── Student
-      ├── Course[]
-      ├── Semester[]
-      │     └── Course[]
-      └── Enrollment
-             └── Course
+      ├── semesters : Semester[]        (planning: which terms the student has planned)
+      └── enrollments : Enrollment[]    (record: what the student has taken)
+              │
+              ├── student  : Student       (back-reference, not serialized)
+              ├── course   : Course
+              ├── semester : Semester
+              ├── completed : boolean
+              └── grade     : String
 ```
+
+### Responsibilities
+
+| Class        | Role                                                                 |
+| ------------ | -------------------------------------------------------------------- |
+| `Program`    | Degree programme with a name and required credits                    |
+| `Student`    | Identity, programme, planned semesters, and enrollments              |
+| `Course`     | Catalogue entity: `id`, code, name, credits. No completion state     |
+| `Semester`   | Planning entity: a term name. No course list                         |
+| `Enrollment` | Links a student, a course, and a semester; holds completion and grade |
+
+### Why this shape
+
+- A course is shared across students, so it cannot carry per-student state.
+- A semester in the abstract has no courses; the *student's* enrolments do.
+- Completion and grade belong to the student-course relationship, not the course itself.
+- Derived values (`completedCredits`, `degreeProgress`) are always recalculated.
 
 ---
 
@@ -157,39 +180,29 @@ Example output:
 Student: mada4843
 Program: Data och Systemvetenskap
 
-Completed credits: 7.5 hp
-Degree progress: 4.17%
+Completed credits: 22.5 hp
+Degree progress: 12.50%
 
 ----- Statistics -----
 
-Total courses: 1
-Completed courses: 1
+Total courses: 3
+Completed courses: 3
 Remaining courses: 0
 
 ----- Course Overview -----
 
 DA123A - Java Programming (7.5 hp) - Completed
+DA234B - Databases (7.5 hp) - Completed
+DA234C - Algorithms (7.5 hp) - Completed
 ```
 
 ---
 
 ## Persistence
 
-Study Planner supports two persistence strategies, both file-based.
+Persistence is JSON-based, using Jackson.
 
-### JSON persistence (primary)
-
-The main persistence layer uses Jackson to serialize the full student object graph:
-
-```text
-Student
-├── Program
-├── Courses[]
-└── Semesters[]
-      └── Courses[]
-```
-
-The repository API is path-based. Callers decide where files are written; there is no dependency on a hardcoded filename.
+### API
 
 ```java
 StudentJsonRepository repository = new StudentJsonRepository();
@@ -203,55 +216,56 @@ Student loaded = repository.loadStudent(file);
 Optional<Student> maybeStudent = repository.findStudent(file);
 ```
 
-#### Behaviour
+### Behaviour
 
-| Situation                                | Behaviour                                |
-| ---------------------------------------- | ---------------------------------------- |
-| File does not exist (`loadStudent`)      | Throws `IOException`                     |
-| File does not exist (`findStudent`)      | Returns `Optional.empty()`               |
-| File contains invalid JSON               | Throws `IOException`                     |
-| File contains unknown fields             | Unknown fields are ignored               |
-| Derived values                           | Not persisted; recalculated on load      |
+| Situation                            | Behaviour                           |
+| ------------------------------------ | ----------------------------------- |
+| File does not exist (`loadStudent`)  | Throws `IOException`                |
+| File does not exist (`findStudent`)  | Returns `Optional.empty()`          |
+| File contains invalid JSON           | Throws `IOException`                |
+| File contains unknown fields         | Unknown fields are ignored          |
+| Derived values                       | Not persisted; recalculated on load |
 
-Derived values such as `completedCredits` and `degreeProgress` are annotated with `@JsonIgnore` because they can always be recomputed from the authoritative data. Persisting them would risk storing stale values that disagree with the courses they were derived from.
+Derived values such as `completedCredits` and `degreeProgress` are annotated with `@JsonIgnore` and recomputed from enrollments on load. Persisting them would risk storing stale values.
 
 Unknown JSON fields are ignored (`FAIL_ON_UNKNOWN_PROPERTIES = false`) so that adding new fields to a model class does not break reading of older files.
 
-#### Example JSON
+### Circular references
+
+`Student` and `Enrollment` reference each other. This is handled with Jackson's `@JsonManagedReference` and `@JsonBackReference`:
+
+- `Student.getEnrollments()` is the managed side and is serialized.
+- `Enrollment.getStudent()` is the back side and is not serialized.
+- The back-reference is restored automatically on load.
+
+### Example JSON
 
 ```json
 {
-  "id": 20060625,
-  "userName": "mada4843",
-  "program": {
-    "name": "Data och Systemvetenskap",
-    "requiredCredits": 180.0
+  "id" : 20060625,
+  "userName" : "mada4843",
+  "program" : {
+    "name" : "Data och Systemvetenskap",
+    "requiredCredits" : 180.0
   },
-  "courses": [
-    {
-      "courseCode": "DA123A",
-      "name": "Java Programming",
-      "completed": true,
-      "credits": 7.5
-    }
-  ],
-  "semesters": [
-    {
-      "name": "HT2026",
-      "courses": []
-    }
-  ]
+  "semesters" : [ {
+    "name" : "HT26"
+  } ],
+  "enrollments" : [ {
+    "course" : {
+      "id" : 1,
+      "courseCode" : "DA123A",
+      "name" : "Java Programming",
+      "credits" : 7.5
+    },
+    "semester" : {
+      "name" : "HT26"
+    },
+    "completed" : true,
+    "grade" : "A"
+  } ]
 }
 ```
-
-### Text persistence (earlier implementation)
-
-Two repositories persist data as delimited text files:
-
-- `CourseFileRepository` — one course per line, comma-separated
-- `StudentFileRepository` — a single student record, semicolon-separated
-
-These were the first persistence implementations and are kept as a reference for how the same problem can be solved with a simpler format. JSON is the recommended approach for new code.
 
 ### Testing
 
@@ -260,7 +274,7 @@ These were the first persistence implementations and are kept as a reference for
 - builds a complete `Student` graph in memory
 - saves it to a temporary file
 - loads it back
-- asserts equality of identity, programme, courses, completion status, and semester contents
+- asserts equality of identity, programme, enrollments, completion status, grades, and the semester link
 
 Tests use JUnit 5's `@TempDir`, which creates a fresh temporary directory per test and cleans it up automatically.
 
@@ -268,41 +282,20 @@ Tests use JUnit 5's `@TempDir`, which creates a fresh temporary directory per te
 
 ## Design Notes
 
-The domain model has been reviewed and clarified before database integration. These decisions define where authoritative data lives and how it is reached.
+These decisions define where authoritative data lives in the model.
 
 ### Domain ownership
 
-**`Course` is a shared catalogue entity.**
-A `Course` describes a course once and is shared across all students. It carries only static information: `id`, `courseCode`, `name`, and `credits`. It does not carry `completed` or `grade`, because those describe a student's relationship with the course, not the course itself.
-
-**`Enrollment` is the single source of truth.**
-All information about a student taking a course lives on `Enrollment`:
-
-- which student
-- which course
-- which semester the student was registered in
-- completion status
-- grade
-
-There is exactly one place where "has completed" is stored.
-
-**`Student` owns enrollments and semesters.**
-`Student` has a `List<Enrollment>` and a `List<Semester>`. The previous `Student.courses` list has been removed. Courses reachable from a student are derived through enrollments.
-
-**`Semester` is a planning entity.**
-A `Semester` represents an academic term and is owned by `Student`. `Semester` does not own a list of courses. Courses taken in a semester are derived by filtering the student's enrollments:
-
-```java
-student.getEnrollments().stream()
-       .filter(e -> e.getSemester().equals(ht26))
-       .map(Enrollment::getCourse)
-       .toList();
-```
+- **`Course` is a shared catalogue entity.** It carries only static information: `id`, `courseCode`, `name`, and `credits`.
+- **`Enrollment` is the single source of truth.** All information about a student taking a course lives on the enrollment: which student, which course, which semester the student was registered in, completion status, and grade.
+- **`Student` owns enrollments and semesters.** Courses reachable from a student are derived through enrollments.
+- **`Semester` is a planning entity.** It represents a term and is owned by a student. It does not own a list of courses.
 
 ### Identifiers
 
-- `Course` has a `Long id` supplied by the caller. This prepares the model for a database primary key without changing the API later.
-- `Enrollment` has no separate id. Its identity is the tuple `(student, course, semester)`, which is unique by construction.
+- `Course` has a `Long id` supplied by the caller, preparing the model for a database primary key.
+- `Enrollment` has no separate id. Its identity is the tuple `(student, course, semester)`.
+- `Semester` is identified by its name.
 
 ### Constraints
 
@@ -314,33 +307,12 @@ student.getEnrollments().stream()
 
 `Semester.name` uses a strict format: `HTxx` (autumn term) or `VTxx` (spring term), where `xx` is a two-digit year. Examples: `HT26`, `VT27`. No other formats are accepted.
 
-### JSON persistence
-
-Circular references between `Student` and `Enrollment` are handled with Jackson's `@JsonManagedReference` and `@JsonBackReference`. The student side is the managed reference and is serialized; the enrollment's back-reference to its student is not serialized, and is restored on load.
-
-Derived values (`completedCredits`, `degreeProgress`) remain excluded from JSON with `@JsonIgnore` and are recalculated on load.
-
 ### Removed
 
 - `Course.completed` and `Course.complete()` — completion now lives on `Enrollment`.
 - `Student.courses` — courses are reached through enrollments.
 - `Semester.courses` — courses in a semester are derived from enrollments.
-- `CourseFileRepository` and `StudentFileRepository` — the older text-based persistence is superseded by JSON. The code remains available in Git history.
-
-### Migration plan
-
-The refactor is performed in small, individually reviewable commits:
-
-1. Documentation: this section.
-2. Add `Enrollment.semester` and `Student.enrollments` (additive, no breakage).
-3. Move `Student` credit calculations to enrollments.
-4. Move `StudyStatistics` and `SemesterStatistics` to enrollments.
-5. Remove `Course.completed`.
-6. Remove `Semester.courses`.
-7. Remove `Student.courses`.
-8. Update `Main` and `StudentJsonRepository`.
-9. Remove old text repositories.
-10. Update README feature and architecture sections.
+- `StudyPlanner`, `CourseFileRepository`, and `StudentFileRepository` — superseded by the new model and `StudentJsonRepository`.
 
 ---
 
@@ -427,18 +399,17 @@ Future versions may include recommendation systems capable of:
 
 The project currently includes:
 
-- Core domain model
+- Core domain model with a single source of truth for enrollments
 - Statistics and reporting
-- Text-file and JSON persistence
+- JSON persistence with round-trip tests
 - Maven build management
 - Automated JUnit testing
 
 Current focus:
 
-- Finalizing JSON persistence design
-- Clarifying domain ownership and completion state
+- Hardening validation and error handling
 - Expanding reporting and analytics
-- Preparing for future database integration
+- Preparing for database integration
 
 Future focus:
 
